@@ -26,10 +26,10 @@ BackupLocal() {
     case $opcao in
         1) Mysql ;;
         2) Hestia ;;
-        3) echo "Otrs";;
-        4) echo "Zimbra";; 
-        5) echo "Postgresql";;
-        6) Template_t01;;
+        3) Otrs ;;
+        4) Zimbra ;; 
+        5) Postgresql ;;
+        6) Template_t01 ;;
         *) echo "Opção desconhecida." ; echo ; BackupLocal ;;
     esac
     
@@ -64,6 +64,25 @@ Hestia() {
     DIR=/joy/backup/hestia
     Dir
 }
+Otrs() {
+    clear       
+    DIR=/joy/backup/otrs
+    Dir
+}
+
+Zimbra() {
+    clear       
+    DIR=/joy/backup/zimbra
+    Dir
+}
+
+Postgresql() {
+    clear       
+    DIR=/joy/backup/postgresql
+    Dir
+}
+
+
 
 Template_t01() {
     clear
