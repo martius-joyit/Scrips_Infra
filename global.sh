@@ -12,9 +12,9 @@ Principal() {
 
 BackupLocal() {
     clear
-    echo "Escolha a opção"
+    echo "Escolha a opção (Template Zabbix 01)"
     echo "------------------------------------------"
-    echo "1. Mysql"
+    echo "1. Mysql "
     echo "2. Hestia"
     echo "3. Otrs"
     echo "4. Zimbra"
@@ -25,33 +25,102 @@ BackupLocal() {
     read opcao
     case $opcao in
         1) Mysql ;;
-        2) echo "Hestia";;
+        2) Hestia ;;
         3) echo "Otrs";;
         4) echo "Zimbra";; 
         5) echo "Postgresql";;
-        6) exit ;;
+        6) Template_t01;;
         *) echo "Opção desconhecida." ; echo ; BackupLocal ;;
     esac
+    
+    
+    
+    
 } 
 
-Mysql() {
-    clear       
-    echo "Criando /joy/backup/mysql"
-    if [ -d "joy/backup/mysql" ]; then
+Dir() {
+      
+    echo "Criando -p $DIR"
+    if [ -d "$DIR" ]; then
     echo " Diretorio ja existe, skip"
+    sleep 2
     BackupLocal
     else
-    mkdir joy/backup/mysql
+    mkdir $DIR
     echo "Diretorio criado"
     sleep 2
     BackupLocal
     fi
 }
 
-mkdir -p joy/backup
-mkdir -p joy/scripts
-mkdir -p joy/storage
+Mysql() {
+    clear       
+    DIR=/joy/backup/mysql
+    Dir
+}
+
+Hestia() {
+    clear       
+    DIR=/joy/backup/hestia
+    Dir
+}
+
+Template_t01() {
+    clear
+    echo -e "\e[36m Fazendo o download dos scripts do template t01 \e[m" 
+    echo
+    sleep 2
+    wget -c -P joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s001_discovery.sh
+    wget -c -P joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s002_status.sh
+    echo -e "\e[32m OK \e[m"
+    
+    echo
+    echo -e "\e[36m Atualizando zabbix_agent.conf \e[m" 
+    echo
+    sleep 2 
+    sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/discovery.sh" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=backup.status[*],/joy/scripts/zabbix/status.sh "'$'1"" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agentd.conf
+    echo -e "\e[32m OK \e[m"
+
+    echo
+    echo -e "\e[36m Reiniciando Zabbix Agent \e[m"
+    echo
+    sleep 2
+    # systemctl restart zabbix-agent
+    echo -e "\e[32m OK \e[m"
+}
+
+echo
+echo -e "\e[36m Criando /joy/backup \e[m" 
+sleep 2
+mkdir -p /joy/backup
+echo -e "\e[32m OK \e[m"
+
+echo
+echo -e "\e[36m Criando /joy/scripts \e[m"
+sleep 2
+mkdir -p /joy/scripts
+echo -e "\e[32m OK \e[m"
+
+echo
+echo -e "\e[36m Criando /joy/storage \e[m"
+sleep 2
+mkdir -p /joy/storage
+echo -e "\e[32m OK \e[m"
+sleep 2
+
 
 Principal
+
+echo
+echo -e "\e[36m Copiando o script global.sh /joy/scripts/global \e[m"
+sleep 2
+SCRIPT=pwd
+mkdir /joy/scripts/global
+cp $SCRIPT/global.sh /joy/scripts/global
+echo -e "\e[32m OK \e[m"
+sleep 2
+
 
 
