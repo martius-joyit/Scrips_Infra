@@ -96,10 +96,10 @@ OS=`hostnamectl | grep Operating | cut -d: -f2 | cut -d' ' -f2`
 echo
 echo -e "\e[36m Instalando jq \e[m" 
 sleep 2
-if $OS="Debian" ; then
+if [ $OS="Debian" ] ; then
 apt-get install jq -y
 echo -e "\e[32m OK \e[m"
-elif $OS="Centos" ; then
+elif [ $OS="Centos" ] ; then
 yum install jq -y
 echo -e "\e[32m OK \e[m"
 else
