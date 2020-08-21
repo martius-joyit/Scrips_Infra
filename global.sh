@@ -72,6 +72,8 @@ Template_t01() {
     sleep 2
     wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s001_discovery.sh
     wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s002_status.sh
+    chmod +x /joy/scripts/zabbix/t01_s001_discovery.sh
+    chmod +x /joy/scripts/zabbix/t01_s002_status.sh
     echo -e "\e[32m OK \e[m"
     
     echo
