@@ -70,8 +70,8 @@ Template_t01() {
     echo -e "\e[36m Fazendo o download dos scripts do template t01 \e[m" 
     echo
     sleep 2
-    wget -c -P joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s001_discovery.sh
-    wget -c -P joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s002_status.sh
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s001_discovery.sh
+    wget -c -P /joy/scripts/zabbix https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t01_s002_status.sh
     echo -e "\e[32m OK \e[m"
     
     echo
@@ -116,8 +116,8 @@ Principal
 echo
 echo -e "\e[36m Copiando o script global.sh /joy/scripts/global \e[m"
 sleep 2
-SCRIPT=pwd
-mkdir /joy/scripts/global
+SCRIPT=`pwd`
+mkdir -p /joy/scripts/global
 cp $SCRIPT/global.sh /joy/scripts/global
 echo -e "\e[32m OK \e[m"
 sleep 2
