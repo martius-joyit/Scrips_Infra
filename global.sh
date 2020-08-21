@@ -80,8 +80,8 @@ Template_t01() {
     echo -e "\e[36m Atualizando zabbix_agent.conf \e[m" 
     echo
     sleep 2 
-    sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/discovery.sh" /etc/zabbix/zabbix_agentd.conf
-    sed -i "4i UserParameter=backup.status[*],/joy/scripts/zabbix/status.sh "'$'1"" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=backup.discovery,/joy/scripts/zabbix/t01_s001_discovery" /etc/zabbix/zabbix_agentd.conf
+    sed -i "4i UserParameter=backup.status[*],/joy/scripts/zabbix/t01_s002_status.sh "'$'1"" /etc/zabbix/zabbix_agentd.conf
     sed -i "4i ### Joy IT" /etc/zabbix/zabbix_agentd.conf
     echo -e "\e[32m OK \e[m"
 
