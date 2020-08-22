@@ -68,20 +68,20 @@ Mysql() {
         echo
         echo -e "\e[36m Instalando XtraBackup \e[m" 
         sleep 2
-        if [ $OS = "Debian" ]; then
-        wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
-        dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
-        apt-get install percona-xtrabackup-24 -y
-        echo -e "\e[32m OK \e[m"
-        elif [ $OS = "Centos" ]; then
-        yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
-        yum update
-        yum install  percona-xtrabackup-24 -y
-        echo -e "\e[32m OK \e[m"
-        else
-        echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
-        sleep 3
-        fi
+            if [ $OS = "Debian" ]; then
+            wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
+            dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
+            apt-get install percona-xtrabackup-24 -y
+            echo -e "\e[32m OK \e[m"
+            elif [ $OS = "CentOS" ]; then
+            yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+            yum update
+            yum install  percona-xtrabackup-24 -y
+            echo -e "\e[32m OK \e[m"
+            else
+            echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
+            sleep 3
+            fi
         wget -c -P /joy/scripts/mysql https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t00_s001_Xtrabackup.sh
         chmod +x /joy/scripts/mysql/t00_s001_Xtrabackup.sh
         sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s001_Xtrabackup.sh
@@ -95,7 +95,7 @@ Mysql() {
         dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
         apt-get install percona-xtrabackup-80 -y
         echo -e "\e[32m OK \e[m"
-        elif [ $OS = "Centos" ]; then
+        elif [ $OS = "CentOS" ]; then
         yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
         yum update
         yum install  percona-xtrabackup-80 -y
@@ -108,14 +108,14 @@ Mysql() {
         chmod +x /joy/scripts/mysql/t00_s001_Xtrabackup.sh
         sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s001_Xtrabackup.sh
         sed -i "94i SECRET=$SECRET"  /joy/scripts/mysql/t00_s001_Xtrabackup.sh
-    elif [ $MY_OPTION = "2" ] ; then
+    elif [ $MY_OPTION = "3" ] ; then
         echo
         echo -e "\e[36m Instalando MariaBackup \e[m" 
         sleep 2
         if [ $OS = "Debian" ]; then
         apt-get install mariadb-backup -y
         echo -e "\e[32m OK \e[m"
-        elif [ $OS = "Centos" ]; then
+        elif [ $OS = "CentOS" ]; then
         yum install  MariaDB-backup -y
         echo -e "\e[32m OK \e[m"
         else
@@ -196,7 +196,7 @@ sleep 2
 if [ $OS = "Debian" ]; then
 apt-get install jq -y
 echo -e "\e[32m OK \e[m"
-elif [ $OS = "Centos" ]; then
+elif [ $OS = "CentOS" ]; then
 yum install jq -y
 echo -e "\e[32m OK \e[m"
 else
