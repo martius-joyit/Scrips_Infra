@@ -44,12 +44,10 @@ Dir() {
     if [ -d "$DIR" ]; then
     echo " Diretorio ja existe, skip"
     sleep 2
-    BackupLocal
     else
     mkdir $DIR
     echo "Diretorio criado"
     sleep 2
-    BackupLocal
     fi
 }
 
@@ -57,6 +55,84 @@ Mysql() {
     clear       
     DIR=/joy/backup/mysql
     Dir
+    echo
+    echo -e "\e[36m Digite o usuário do mysql \e[m" ; read USER
+    echo -e "\e[36m Digite a senha para usuário $USER \e[m" ; read SECRET
+    MYSQL=`mysql --version`
+    
+    echo "Para versao Mysql ate 5.7 | Digite: 1"
+    echo "Para versao Mysql 8 ou maior | Digite: 2"
+    echo "Para versao Mariadb | Digite: 3"
+    echo -e "\e[36m A versao do mysql e: $MYSQL \e[m" ; read MY_OPTION
+    if [ $MY_OPTION = "1" ] ; then
+        echo
+        echo -e "\e[36m Instalando XtraBackup \e[m" 
+        sleep 2
+        if [ $OS = "Debian" ]; then
+        wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
+        dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
+        apt-get install percona-xtrabackup-24 -y
+        echo -e "\e[32m OK \e[m"
+        elif [ $OS = "Centos" ]; then
+        yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+        yum update
+        yum install  percona-xtrabackup-24 -y
+        echo -e "\e[32m OK \e[m"
+        else
+        echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
+        sleep 3
+        fi
+        wget -c -P /joy/scripts/mysql https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t00_s001_Xtrabackup.sh
+        chmod +x /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+        sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+        sed -i "94i SECRET=$SECRET"  /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+    elif [ $MY_OPTION = "2" ] ; then
+        echo
+        echo -e "\e[36m Instalando XtraBackup \e[m" 
+        sleep 2
+        if [ $OS = "Debian" ]; then
+        wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
+        dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
+        apt-get install percona-xtrabackup-80 -y
+        echo -e "\e[32m OK \e[m"
+        elif [ $OS = "Centos" ]; then
+        yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+        yum update
+        yum install  percona-xtrabackup-80 -y
+        echo -e "\e[32m OK \e[m"
+        else
+        echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
+        sleep 3
+        fi
+        wget -c -P /joy/scripts/mysql https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t00_s001_Xtrabackup.sh
+        chmod +x /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+        sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+        sed -i "94i SECRET=$SECRET"  /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+    elif [ $MY_OPTION = "2" ] ; then
+        echo
+        echo -e "\e[36m Instalando MariaBackup \e[m" 
+        sleep 2
+        if [ $OS = "Debian" ]; then
+        apt-get install mariadb-backup -y
+        echo -e "\e[32m OK \e[m"
+        elif [ $OS = "Centos" ]; then
+        yum install  MariaDB-backup -y
+        echo -e "\e[32m OK \e[m"
+        else
+        echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o MariaBackup \e[m"
+        sleep 3
+        fi
+        wget -c -P /joy/scripts/mysql https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t00_s002_Mariabackup.sh
+        chmod +x /joy/scripts/mysql/t00_s002_Mariabackup.sh
+        sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s002_Mariabackup.sh
+        sed -i "94i SECRET=$SECRET"  /joy/scripts/mysql/t00_s002_Mariabackup.sh
+    else
+    echo -e "\e[31m $OS - Opcao invalida | Digite uma das opcoes validas \e[m" 
+    sleep 3
+    Mysql
+    fi
+    BackupLocal
+
 }
 
 Hestia() {
