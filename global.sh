@@ -76,7 +76,7 @@ Mysql() {
             apt-get install percona-xtrabackup-24 -y
             echo -e "\e[32m OK \e[m"
             elif [ $OS = "CentOS" ]; then
-            yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+            yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm -y
             yum install  percona-xtrabackup-24 -y
             echo -e "\e[32m OK \e[m"
             else
@@ -130,14 +130,22 @@ Mysql() {
 }
 
 Deploy_Script_Mysql() {
+      echo -e "\e[36m Baixando e configurando o script \e[m"
       wget -c -P $DIR_SCP https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/$SCRIPT
       chmod +x $DIR_SCP/$SCRIPT
       sed -i "94i USER=$USER" $DIR_SCP/$SCRIPT
       sed -i "94i SECRET=$SECRET"  $DIR_SCP/$SCRIPT
+      echo -e "\e[32m OK \e[m"
+      echo
       echo -e "\e[36m Digite a Hora do backup do mysql \e[m" ; read HORA
+      echo
       echo -e "\e[36m Digite o Minuto do backup \e[m" ; read MIN
-      cronjob="  $HORA $MIN * * $DIR_SCP/$SCRIPT full #Script Backup XtraBackup | Seg-Dom as $HORA:$MIN"
+      echo
+      echo -e "\e[36m Adicionando tarefa no cron \e[m" 
+      cronjob=" $MIN $HORA * * * $DIR_SCP/$SCRIPT full #Script Backup XtraBackup | Seg-Dom as $HORA:$MIN"
       (crontab -u root -l; echo "$cronjob" ) | crontab -u root -
+      echo -e "\e[32m OK \e[m"
+      sleep 3
 
 }
 
