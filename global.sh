@@ -86,6 +86,7 @@ Mysql() {
         Deploy_Script_Mysql 
     
     elif [ $MY_OPTION = "2" ] ; then
+        SCRIPT=t00_s001_Xtrabackup.sh
         echo
         echo -e "\e[36m Instalando XtraBackup \e[m" 
         sleep 2
@@ -105,6 +106,7 @@ Mysql() {
         Deploy_Script_Mysql        
         
     elif [ $MY_OPTION = "3" ] ; then
+        SCRIPT=t00_s002_Mariabackup.sh
         echo
         echo -e "\e[36m Instalando MariaBackup \e[m" 
         sleep 2
