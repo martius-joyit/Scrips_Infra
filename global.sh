@@ -40,31 +40,33 @@ BackupLocal() {
 
 Dir() {
       
-    echo "Criando -p $DIR"
-    if [ -d "$DIR" ]; then
+    echo "Criando -p $DIR_BKP"
+    if [ -d "$DIR_BKP" ]; then
     echo " Diretorio ja existe, skip"
     sleep 2
     else
-    mkdir $DIR
+    mkdir $DIR_BKP
     echo "Diretorio criado"
     sleep 2
     fi
 }
 
 Mysql() {
-    clear       
-    DIR=/joy/backup/mysql
+    clear
+    DIR_SCP=/joy/scripts/mysql       
+    DIR_BKP=/joy/backup/mysql
     Dir
     echo
     echo -e "\e[36m Digite o usuário do mysql \e[m" ; read USER
     echo -e "\e[36m Digite a senha para usuário $USER \e[m" ; read SECRET
     MYSQL=`mysql --version`
     
-    echo "Para versao Mysql ate 5.7 | Digite: 1"
-    echo "Para versao Mysql 8 ou maior | Digite: 2"
-    echo "Para versao Mariadb | Digite: 3"
+    echo "Para versao Mysql < ou = 5.7 ou Mariadb < ou = 10.2 | Digite: 1"
+    echo "Para versao = ou > Mysql 8  | Digite: 2"
+    echo "Para versao = ou > Mariadb 10.3 ou > | Digite: 3"
     echo -e "\e[36m A versao do mysql e: $MYSQL \e[m" ; read MY_OPTION
     if [ $MY_OPTION = "1" ] ; then
+        SCRIPT=t00_s001_Xtrabackup.sh
         echo
         echo -e "\e[36m Instalando XtraBackup \e[m" 
         sleep 2
@@ -75,17 +77,14 @@ Mysql() {
             echo -e "\e[32m OK \e[m"
             elif [ $OS = "CentOS" ]; then
             yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
-            yum update
             yum install  percona-xtrabackup-24 -y
             echo -e "\e[32m OK \e[m"
             else
             echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
             sleep 3
             fi
-        wget -c -P /joy/scripts/mysql https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t00_s001_Xtrabackup.sh
-        chmod +x /joy/scripts/mysql/t00_s001_Xtrabackup.sh
-        sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s001_Xtrabackup.sh
-        sed -i "94i SECRET=$SECRET"  /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+        Deploy_Script_Mysql 
+    
     elif [ $MY_OPTION = "2" ] ; then
         echo
         echo -e "\e[36m Instalando XtraBackup \e[m" 
@@ -97,17 +96,14 @@ Mysql() {
         echo -e "\e[32m OK \e[m"
         elif [ $OS = "CentOS" ]; then
         yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
-        yum update
         yum install  percona-xtrabackup-80 -y
         echo -e "\e[32m OK \e[m"
         else
         echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o xtraBackup \e[m"
         sleep 3
         fi
-        wget -c -P /joy/scripts/mysql https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t00_s001_Xtrabackup.sh
-        chmod +x /joy/scripts/mysql/t00_s001_Xtrabackup.sh
-        sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s001_Xtrabackup.sh
-        sed -i "94i SECRET=$SECRET"  /joy/scripts/mysql/t00_s001_Xtrabackup.sh
+        Deploy_Script_Mysql        
+        
     elif [ $MY_OPTION = "3" ] ; then
         echo
         echo -e "\e[36m Instalando MariaBackup \e[m" 
@@ -122,16 +118,26 @@ Mysql() {
         echo -e "\e[31m $OS - OS não suportado | Verifique a forma correta de instalar o MariaBackup \e[m"
         sleep 3
         fi
-        wget -c -P /joy/scripts/mysql https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/t00_s002_Mariabackup.sh
-        chmod +x /joy/scripts/mysql/t00_s002_Mariabackup.sh
-        sed -i "94i USER=$USER" /joy/scripts/mysql/t00_s002_Mariabackup.sh
-        sed -i "94i SECRET=$SECRET"  /joy/scripts/mysql/t00_s002_Mariabackup.sh
+        Deploy_Script_Mysql
+
     else
     echo -e "\e[31m $OS - Opcao invalida | Digite uma das opcoes validas \e[m" 
     sleep 3
     Mysql
     fi
     BackupLocal
+
+}
+
+Deploy_Script_Mysql() {
+      wget -c -P $DIR_SCP https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/$SCRIPT
+      chmod +x $DIR_SCP/$SCRIPT
+      sed -i "94i USER=$USER" $DIR_SCP/$SCRIPT
+      sed -i "94i SECRET=$SECRET"  $DIR_SCP/$SCRIPT
+      echo -e "\e[36m Digite a Hora do backup do mysql \e[m" ; read HORA
+      echo -e "\e[36m Digite o Minuto do backup \e[m" ; read MIN
+      cronjob="  $HORA $MIN * * $DIR_SCP/$SCRIPT full #Script Backup XtraBackup | Seg-Dom as $HORA:$MIN"
+      (crontab -u root -l; echo "$cronjob" ) | crontab -u root -
 
 }
 
@@ -234,6 +240,7 @@ mkdir -p /joy/scripts/global
 cp $SCRIPT/global.sh /joy/scripts/global
 echo -e "\e[32m OK \e[m"
 sleep 2
+
 
 
 
