@@ -133,7 +133,7 @@ Mysql() {
 
 Deploy_Script_Mysql() {
       echo -e "\e[36m Baixando e configurando o script \e[m"
-      wget -O $DIR_SCP/$SCRIPT https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/$SCRIPT
+      wget -P -O $DIR_SCP/$SCRIPT https://raw.githubusercontent.com/joyitcwb/Scrips_Infra/master/scripts/$SCRIPT
       chmod +x $DIR_SCP/$SCRIPT
       sed -i "94i USER=$USER" $DIR_SCP/$SCRIPT
       sed -i "94i SECRET=$SECRET"  $DIR_SCP/$SCRIPT
