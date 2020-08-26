@@ -97,7 +97,8 @@ Mysql() {
         apt-get install percona-xtrabackup-80 -y
         echo -e "\e[32m OK \e[m"
         elif [ $OS = "CentOS" ]; then
-        yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+        yum install perl-DBD-MySQL -y
+        yum install https://repo.percona.com/yum/percona-release-latest.noarch.rpm -y
         yum install  percona-xtrabackup-80 -y
         echo -e "\e[32m OK \e[m"
         else
