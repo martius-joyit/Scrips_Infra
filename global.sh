@@ -40,12 +40,13 @@ BackupLocal() {
 
 Dir() {
       
-    echo "Criando -p $DIR_BKP"
-    if [ -d "$DIR_BKP" ]; then
+    echo "Criando -p $DIR_BKP e $DIR_SCP"
+    if [ -d "$DIR_BKP" ] && [ -d "$DIR_SCP" ]; then
     echo " Diretorio ja existe, skip"
     sleep 2
     else
     mkdir $DIR_BKP
+    mkdir $DIR_SCP
     echo "Diretorio criado"
     sleep 2
     fi
